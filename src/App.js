@@ -22,19 +22,25 @@ export default class App extends Component {
       players: 2,
       turn: 1,
       selectedPiece: null,
-      selectedPlace: 'large'
+      selectedSpace: null
     }
     this.selectPiece = this.selectPiece.bind(this);
+    this.selectSpace = this.selectSpace.bind(this);
   }
   selectPiece(piece, index) {
     this.state.selectedPiece ?
       this.setState({selectedPiece: null}) :
       this.setState({selectedPiece: {piece, index}})
   }
+  selectSpace(space, index) {
+    this.state.selectedSpace ?
+      this.setState({selectedSpace: null}) :
+      this.setState({selectedSpace: {space, index}})
+  }
   render() {
     return (
         <div className="App">
-          <Board spaces={this.state.spaces} />
+          <Board select={this.selectSpace} spaces={this.state.spaces} />
           <Player select={this.selectPiece} />
         </div>
       );
