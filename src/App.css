@@ -26,6 +26,11 @@
   margin: 50px;
 }
 
+.null {
+  border: 10px solid lightgrey;
+  box-shadow: 0px 0px 5px lightgrey;
+}
+
 .red {
   border: 10px solid red;
   box-shadow: 0px 0px 5px darkred;
@@ -35,4 +40,11 @@
   width: 150px;
   height: 150px;
   background-color: white;
+}
+
+.board {
+  width: 450px;
+  height: 450px;
+  display: flex;
+  flex-wrap: wrap;
 }
