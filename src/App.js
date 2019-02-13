@@ -17,6 +17,7 @@ export default class App extends Component {
     this.selectPiece = this.selectPiece.bind(this);
     this.selectSpace = this.selectSpace.bind(this);
     this.setSpace = this.setSpace.bind(this);
+    this.canMove = this.canMove.bind(this);
   }
   buildSpaces(amount, color) {
     let spaces = [];
@@ -25,23 +26,32 @@ export default class App extends Component {
     }
     return spaces;
   }
-  selectPiece(piece, index) {
-    this.state.selectedPiece ?
+  async selectPiece(piece, index) {
+    await this.state.selectedPiece ?
       this.setState({selectedPiece: null}) :
-      this.setState({selectedPiece: {piece, index}})
+      this.setState({selectedPiece: {piece, index}});
+    this.canMove();
   }
-  selectSpace(space, index) {
-    this.state.selectedSpace ?
+  async selectSpace(space, index) {
+    let { selectedSpace } = this.state;
+    await selectedSpace ?
       this.setState({selectedSpace: null}) :
       this.setState({selectedSpace: {space, index}});
-    this.setSpace(space, index);
-    this.removePiece(this.state.selectedPiece.piece, this.state.selectedPiece.index);
-    this.setState({ selectedPiece: null, selectedSpace: null });
+    this.canMove();
+  }
+  canMove() {
+    let { selectedSpace, selectedPiece } = this.state;
+    console.log(selectedSpace, selectedPiece);
+    if (selectedSpace && selectedPiece) {
+      this.setSpace(selectedSpace.space, selectedSpace.index);
+      this.removePiece(selectedPiece.piece, selectedPiece.index);
+      this.setState({ selectedPiece: null, selectedSpace: null });
+    }
   }
   setSpace(space, index) {
     let { spaces } = this.state;
     spaces[index][space] = 'red';
-    this.setState({spaces});
+    this.setState({ spaces });
   }
   removePiece(piece, index) {
     let { players } = this.state;
@@ -51,7 +61,7 @@ export default class App extends Component {
   componentDidMount() {
     let spaces = this.buildSpaces(9, null);
     let players = this.buildSpaces(3, 'red');
-    this.setState({ spaces, players })
+    this.setState({ spaces, players });
   }
   render() {
     return (
@@ -62,4 +72,3 @@ export default class App extends Component {
       );
   }
 }
-
