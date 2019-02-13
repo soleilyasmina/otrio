@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Board from './components/Board';
 import Player from './components/Player';
+import win from './services/winconditions';
 
 export default class App extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ export default class App extends Component {
     this.selectSpace = this.selectSpace.bind(this);
     this.setSpace = this.setSpace.bind(this);
     this.canMove = this.canMove.bind(this);
+    this.checkWin = this.checkWin.bind(this);
   }
   buildSpaces(amount, color) {
     let spaces = [];
@@ -46,7 +48,11 @@ export default class App extends Component {
       this.setSpace(selectedSpace.space, selectedSpace.index);
       this.removePiece(selectedPiece.piece, selectedPiece.index);
       this.setState({ selectedPiece: null, selectedSpace: null });
+      this.checkWin();
     }
+  }
+  checkWin() {
+    console.log(win(this.state.spaces));
   }
   setSpace(space, index) {
     let { spaces } = this.state;
