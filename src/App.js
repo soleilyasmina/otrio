@@ -21,6 +21,7 @@ export default class App extends Component {
     this.canMove = this.canMove.bind(this);
     this.checkWin = this.checkWin.bind(this);
     this.turnColor = this.turnColor.bind(this);
+    this.startGame = this.startGame.bind(this);
   }
   buildSpaces(amount, color) {
     let spaces = [];
@@ -75,11 +76,16 @@ export default class App extends Component {
       await this.removePiece(selectedPiece);
       await this.setState({ selectedPiece: null, selectedSpace: null });
       await this.checkWin();
-      await this.changeTurn();
     }
   }
   async checkWin() {
-    await this.setState({win: win(this.state.spaces)});
+    await this.setState({ win: win(this.state.spaces) });
+    if (this.state.win) {
+      setTimeout(this.startGame, 3000);
+      await this.setState({ turn: 0 });
+    } else {
+      await this.changeTurn();
+    }
   }
   async setSpace(selectedSpace, color) {
     let { space, index } = selectedSpace;
@@ -93,10 +99,13 @@ export default class App extends Component {
     players[turn][index][piece] = null;
     await this.setState({ players });
   }
-  componentWillMount() {
+  startGame() {
     let spaces = this.buildSpaces(9, null);
     let players = this.buildPlayers(2);
-    this.setState({ spaces, players });
+    this.setState({ spaces, players, win: false });
+  }
+  componentWillMount() {
+    this.startGame();
   }
   render() {
     let color = this.turnColor();
