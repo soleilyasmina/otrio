@@ -34,11 +34,15 @@
   box-shadow: 0px 0px 5px lightgrey;
 }
 
-.red {
-  border: 10px solid red;
+.firebrick {
+  border: 10px solid firebrick;
   box-shadow: 0px 0px 5px darkred;
 }
 
+.royalblue {
+  border: 10px solid royalblue;
+  box-shadow: 0px 0px 5px blue;
+}
 .space {
   width: 150px;
   height: 150px;
@@ -48,6 +52,13 @@
 .board {
   width: 450px;
   height: 450px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.player {
+  width: 450px;
+  height: 150px;
   display: flex;
   flex-wrap: wrap;
 }
