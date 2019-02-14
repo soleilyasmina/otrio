@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Board from './components/Board';
+import Stats from './components/Stats';
 import win from './services/winconditions';
 
 export default class App extends Component {
@@ -19,6 +20,7 @@ export default class App extends Component {
     this.setSpace = this.setSpace.bind(this);
     this.canMove = this.canMove.bind(this);
     this.checkWin = this.checkWin.bind(this);
+    this.turnColor = this.turnColor.bind(this);
   }
   buildSpaces(amount, color) {
     let spaces = [];
@@ -97,11 +99,13 @@ export default class App extends Component {
     this.setState({ spaces, players });
   }
   render() {
+    let color = this.turnColor();
     return (
         <div className="App">
           <Board select={this.selectSpace} boardType={'board'} spaces={this.state.spaces} />
           <Board select={this.selectPiece} boardType={'player'} spaces={this.state.players[0]} />
           <Board select={this.selectPiece} boardType={'player'} spaces={this.state.players[1]} />
+          <Stats win={this.state.win} turn={this.state.turn} color={color}/> 
         </div>
       );
   }
