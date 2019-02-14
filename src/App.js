@@ -41,28 +41,29 @@ export default class App extends Component {
       this.setState({selectedSpace: {space, index}});
     this.canMove();
   }
-  canMove() {
+  async canMove() {
     let { selectedSpace, selectedPiece } = this.state;
     console.log(selectedSpace, selectedPiece);
-    if (selectedSpace && selectedPiece) {
-      this.setSpace(selectedSpace.space, selectedSpace.index);
-      this.removePiece(selectedPiece.piece, selectedPiece.index);
-      this.setState({ selectedPiece: null, selectedSpace: null });
-      this.checkWin();
+    if (selectedSpace && selectedPiece 
+      && selectedSpace.space === selectedPiece.piece) {
+      await this.setSpace(selectedSpace.space, selectedSpace.index);
+      await this.removePiece(selectedPiece.piece, selectedPiece.index);
+      await this.setState({ selectedPiece: null, selectedSpace: null });
+      await this.checkWin();
     }
   }
-  checkWin() {
-    console.log(win(this.state.spaces));
+  async checkWin() {
+    await console.log(win(this.state.spaces));
   }
-  setSpace(space, index) {
+  async setSpace(space, index) {
     let { spaces } = this.state;
     spaces[index][space] = 'red';
-    this.setState({ spaces });
+    await this.setState({ spaces });
   }
-  removePiece(piece, index) {
+  async removePiece(piece, index) {
     let { players } = this.state;
     players[index][piece] = null;
-    this.setState({ players });
+    await this.setState({ players });
   }
   componentDidMount() {
     let spaces = this.buildSpaces(9, null);
