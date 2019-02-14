@@ -35,8 +35,8 @@ export default class App extends Component {
     let players = [];
     players.push(this.buildSpaces(3, 'firebrick'));
     players.push(this.buildSpaces(3, 'royalblue'));
-    if (amount >= 3) players.push(this.buildSpaces(3, null));
-    if (amount === 4) players.push(this.buildSpaces(3,null));
+    amount >= 3 ? players.push(this.buildSpaces(3, 'darkgreen')): players.push(this.buildSpaces(3, null));
+    amount === 4 ? players.push(this.buildSpaces(3, 'darkorchid')) : players.push(this.buildSpaces(3, null));
     return players;
   }
   async changeTurn() {
@@ -49,6 +49,10 @@ export default class App extends Component {
     switch(this.state.turn) {
       case 1:
         return 'royalblue';
+      case 2:
+        return 'darkgreen';
+      case 3:
+        return 'darkorchid';
       default:
         return 'firebrick';
     }
@@ -104,7 +108,7 @@ export default class App extends Component {
   }
   startGame() {
     let spaces = this.buildSpaces(9, null);
-    let players = this.buildPlayers(2);
+    let players = this.buildPlayers(4);
     this.setState({ spaces, players, win: false });
   }
   componentWillMount() {
@@ -114,9 +118,11 @@ export default class App extends Component {
     let color = this.turnColor();
     return (
         <div className="App">
+          <Board select={this.selectPiece} boardType={'player three'} spaces={this.state.players[2]} />
+          <Board select={this.selectPiece} boardType={'player four'} spaces={this.state.players[3]} />
           <Board select={this.selectSpace} boardType={'board'} spaces={this.state.spaces} />
-          <Board select={this.selectPiece} boardType={'player'} spaces={this.state.players[0]} />
-          <Board select={this.selectPiece} boardType={'player'} spaces={this.state.players[1]} />
+          <Board select={this.selectPiece} boardType={'player two'} spaces={this.state.players[1]} />
+          <Board select={this.selectPiece} boardType={'player one'} spaces={this.state.players[0]} />
           <Stats win={this.state.win} turn={this.state.turn} color={color}/> 
         </div>
       );

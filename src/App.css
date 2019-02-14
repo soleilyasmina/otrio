@@ -1,5 +1,11 @@
 .App {
   text-align: center;
+  width: 750px;
+  height: 750px;
+  display: grid;
+  grid-template-columns: 150px 450px 150px;
+  grid-template-rows: 150px 450px 150px;
+  margin: auto;
 }
 
 .piece {
@@ -15,7 +21,7 @@
 .large {
   width: 150px;
   height: 150px;
-  margin: auto;
+  margin: 0px;
 }
 .medium {
   width: 100px;
@@ -43,10 +49,20 @@
   border: 10px solid royalblue;
   box-shadow: 0px 0px 5px blue;
 }
+
+.darkgreen {
+  border: 10px solid darkgreen;
+  box-shadow: 0px 0px 5px darkolivegreen;
+}
+
+.darkorchid {
+  border: 10px solid darkorchid;
+  box-shadow: 0px 0px 5px darkmagenta;
+}
+
 .space {
   width: 150px;
   height: 150px;
-  background-color: white;
 }
 
 .board {
@@ -54,11 +70,34 @@
   height: 450px;
   display: flex;
   flex-wrap: wrap;
+  grid-area: 2 / 2 / 3 / 3;
 }
 
 .player {
-  width: 450px;
-  height: 150px;
   display: flex;
   flex-wrap: wrap;
+}
+
+.one {
+  width: 450px;
+  height: 150px;
+  grid-area: 3 / 2 / 4 / 3;
+}
+
+.two {
+  width: 150px;
+  height: 450px;
+  grid-area: 2 / 3 / 3 / 4;
+}
+
+.three {
+  width: 450px;
+  height: 150px;
+  grid-area: 1 / 2 / 3 / 3;  
+}
+
+.four {
+  width: 150px;
+  height: 450px;
+  grid-area: 2 / 1 / 3 / 2;
 }
