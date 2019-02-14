@@ -4,12 +4,17 @@
   height: 100vh;
   margin: auto;
   display: flex;
+  justify-content: center;
 }
 
 .game {
   display: grid;
   grid-template-columns: 150px 450px 150px;
   grid-template-rows: 150px 450px 150px;
+  margin: auto;
+}
+.stats {
+  width: 300px;
   margin: auto;
 }
 
