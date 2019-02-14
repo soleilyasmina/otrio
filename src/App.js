@@ -117,14 +117,18 @@ export default class App extends Component {
   render() {
     let color = this.turnColor();
     return (
-        <div className="App">
+      <div className="App">
+        <div className="game">
           <Board select={this.selectPiece} boardType={'player three'} spaces={this.state.players[2]} />
           <Board select={this.selectPiece} boardType={'player four'} spaces={this.state.players[3]} />
           <Board select={this.selectSpace} boardType={'board'} spaces={this.state.spaces} />
           <Board select={this.selectPiece} boardType={'player two'} spaces={this.state.players[1]} />
           <Board select={this.selectPiece} boardType={'player one'} spaces={this.state.players[0]} />
+        </div>
+        <div className="stats">
           <Stats win={this.state.win} turn={this.state.turn} color={color}/> 
         </div>
+      </div>
       );
   }
 }
