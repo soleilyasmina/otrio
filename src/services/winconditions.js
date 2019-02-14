@@ -23,38 +23,46 @@ const check = (conditions, spaces) => {
     case spaces[0][first] === spaces[1][second] &&
         spaces[1][second] === spaces[2][third] &&
         spaces[2][third] !== null:
+      console.log(1);
       return true;
     case spaces[3][first] === spaces[4][second] &&
         spaces[4][second] === spaces[5][third] &&
         spaces[5][third] !== null:
+      console.log(2);
       return true;
     case spaces[6][first] === spaces[7][second] &&
         spaces[7][second] === spaces[8][third] &&
         spaces[8][third] !== null:
+      console.log(3);
       return true;
 
     // vertical cases
     case spaces[0][first] === spaces[3][second] &&
         spaces[3][second] === spaces[6][third] &&
         spaces[6][third] !== null:
+      console.log(4);
       return true;
     case spaces[1][first] === spaces[4][second] &&
         spaces[4][second] === spaces[7][third] &&
-        spaces[2][third] !== null:
+        spaces[7][third] !== null:
+      console.log(5);
       return true;
     case spaces[2][first] === spaces[5][second] &&
         spaces[5][second] === spaces[8][third] &&
         spaces[8][third] !== null:
+      console.log(6);
       return true;
 
     // diagonal cases
     case spaces[0][first] === spaces[4][second] &&
         spaces[4][second] === spaces[8][third] &&
         spaces[8][third] !== null:
+      console.log(7);
       return true;
     case spaces[6][first] === spaces[4][second] &&
         spaces[4][second] === spaces[2][third] &&
         spaces[2][third] !== null:
+      console.log(8);
       return true;
 
     default:
