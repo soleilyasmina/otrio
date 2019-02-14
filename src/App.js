@@ -12,6 +12,7 @@ export default class App extends Component {
       players: [],
       win: false,
       turn: 0,
+      points: [0,0],
       selectedPiece: null,
       selectedSpace: null
     }
@@ -81,8 +82,10 @@ export default class App extends Component {
   async checkWin() {
     await this.setState({ win: win(this.state.spaces) });
     if (this.state.win) {
+      let { points } = this.state;
+      points[this.state.turn] += 1;
       setTimeout(this.startGame, 3000);
-      await this.setState({ turn: 0 });
+      await this.setState({ turn: 0, points });
     } else {
       await this.changeTurn();
     }
