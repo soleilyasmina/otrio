@@ -62,10 +62,9 @@ export default class App extends Component {
     await this.state.selectedPiece ?
       this.setState({selectedPiece: null}) :
       this.setState({selectedPiece: {piece, color, index}});
-    this.canMove();
   }
   async selectSpace(space, color, index) {
-    if (color !== null) return;
+    if (color !== null || this.state.selectedPiece === null ) return;
     let { selectedSpace } = this.state;
     await selectedSpace ?
       this.setState({selectedSpace: null}) :
@@ -119,9 +118,9 @@ export default class App extends Component {
     return (
       <div className="App">
         <div className="game">
-          <Board select={this.selectPiece} boardType={'player three'} spaces={this.state.players[2]} />
-          <Board select={this.selectPiece} boardType={'player four'} spaces={this.state.players[3]} />
           <Board select={this.selectSpace} boardType={'board'} spaces={this.state.spaces} />
+          <Board select={this.selectPiece} boardType={'player four'} spaces={this.state.players[3]} />
+          <Board select={this.selectPiece} boardType={'player three'} spaces={this.state.players[2]} />
           <Board select={this.selectPiece} boardType={'player two'} spaces={this.state.players[1]} />
           <Board select={this.selectPiece} boardType={'player one'} spaces={this.state.players[0]} />
         </div>
