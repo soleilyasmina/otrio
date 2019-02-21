@@ -28,6 +28,16 @@
   box-shadow: 0px 0px 5px black;
 }
 
+@keyframes blink {
+    0% {opacity: 0;}
+    50% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+.selected {
+  animation: blink 1s ease-in-out infinite;
+}
+
 .large {
   width: 125px;
   height: 125px;
