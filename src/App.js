@@ -12,7 +12,7 @@ export default class App extends Component {
       players: [],
       win: false,
       turn: 0,
-      points: [0,0],
+      points: [],
       selectedPiece: null,
       selectedSpace: null
     }
@@ -23,6 +23,7 @@ export default class App extends Component {
     this.checkWin = this.checkWin.bind(this);
     this.turnColor = this.turnColor.bind(this);
     this.startGame = this.startGame.bind(this);
+    this.markSelected = this.markSelected.bind(this);
   }
   buildSpaces(amount, color) {
     let spaces = [];
@@ -37,11 +38,14 @@ export default class App extends Component {
     players.push(this.buildSpaces(3, 'royalblue'));
     amount >= 3 ? players.push(this.buildSpaces(3, 'darkgreen')): players.push(this.buildSpaces(3, null));
     amount === 4 ? players.push(this.buildSpaces(3, 'darkorchid')) : players.push(this.buildSpaces(3, null));
+    let points = [];
+    for (let i = 0; i < amount; i++) points.push(0);
+    this.setState({ points });
     return players;
   }
   async changeTurn() {
-    let { turn, players } = this.state;
-    await turn === players.length - 1 ?
+    let { turn, points } = this.state;
+    await turn === points.length - 1 ?
       this.setState({turn: 0}) :
       this.setState({turn: turn + 1});
   }
@@ -57,18 +61,35 @@ export default class App extends Component {
         return 'firebrick';
     }
   }
+  async markSelected(selected) {
+    let { selectedPiece, players, turn } = this.state;
+    let { index, piece, color } = selectedPiece;
+    if(selected) {
+      players[turn][index][piece] += ' selected' ;
+    } else {
+      players[turn][index][piece] = players[turn][index][piece].split(' ')[0];
+    }
+    this.setState({ players });
+  }
   async selectPiece(piece, color, index) {
     if (color === null || color !== this.turnColor()) return;
-    await this.state.selectedPiece ?
-      this.setState({selectedPiece: null}) :
-      this.setState({selectedPiece: {piece, color, index}});
+    if (this.state.selectedPiece) {
+      await this.markSelected(false);
+      await this.setState({selectedPiece: null});
+    } else {
+      await this.setState({selectedPiece: {piece, color, index}});
+      await this.markSelected(true);
+    }
+    
   }
   async selectSpace(space, color, index) {
     if (color !== null || this.state.selectedPiece === null ) return;
-    let { selectedSpace } = this.state;
-    await selectedSpace ?
-      this.setState({selectedSpace: null}) :
+    let { selectedSpace } = await this.state;
+    if (selectedSpace) {
+      this.setState({selectedSpace: null});
+    } else {
       this.setState({selectedSpace: {space, index}});
+    }
     this.canMove();
   }
   async canMove() {
@@ -107,7 +128,7 @@ export default class App extends Component {
   }
   startGame() {
     let spaces = this.buildSpaces(9, null);
-    let players = this.buildPlayers(4);
+    let players = this.buildPlayers(3);
     this.setState({ spaces, players, win: false });
   }
   componentWillMount() {
