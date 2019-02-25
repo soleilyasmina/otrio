@@ -12,7 +12,7 @@ export default class App extends Component {
       players: [],
       win: false,
       turn: 0,
-      points: [],
+      scores: null,
       selectedPiece: null,
       selectedSpace: null
     }
@@ -34,23 +34,31 @@ export default class App extends Component {
   }
   buildPlayers(amount) {
     let players = [];
-    players.push(this.buildSpaces(3, 'firebrick'));
-    players.push(this.buildSpaces(3, 'royalblue'));
-    amount >= 3 ? players.push(this.buildSpaces(3, 'darkgreen')): players.push(this.buildSpaces(3, null));
-    amount === 4 ? players.push(this.buildSpaces(3, 'darkorchid')) : players.push(this.buildSpaces(3, null));
-    let points = [];
-    for (let i = 0; i < amount; i++) points.push(0);
-    this.setState({ points });
+    for (let i = 0; i < amount; i++) {
+      let color = this.turnColor(i);
+      players.push(this.buildSpaces(3, color));
+    }
+    for (let i = amount; i < 4; i++) {
+      players.push(this.buildSpaces(3,null));
+    }
     return players;
   }
+  buildScores(amount) {
+    let scores = [];
+    for (let i = 0; i < amount; i++) {
+      let color = this.turnColor(i);
+      scores.push({ points: 0, username: color, color });
+    }
+    return scores;
+  }
   async changeTurn() {
-    let { turn, points } = this.state;
-    await turn === points.length - 1 ?
+    let { turn, scores } = this.state;
+    await turn === scores.length - 1 ?
       this.setState({turn: 0}) :
       this.setState({turn: turn + 1});
   }
-  turnColor() {
-    switch(this.state.turn) {
+  turnColor(turn = this.state.turn) {
+    switch(turn) {
       case 1:
         return 'royalblue';
       case 2:
@@ -103,13 +111,16 @@ export default class App extends Component {
       await this.checkWin();
     }
   }
+  async hasMoves() {
+    let { spaces, players } = this.state;
+  }
   async checkWin() {
     await this.setState({ win: win(this.state.spaces) });
     if (this.state.win) {
-      let { points } = this.state;
-      points[this.state.turn] += 1;
-      setTimeout(this.startGame, 3000);
-      await this.setState({ turn: 0, points });
+      let { scores } = this.state;
+      scores[this.state.turn].points += 1;
+      await setTimeout(this.startGame, 3000);
+      await this.setState({ turn: 0, scores });
     } else {
       await this.changeTurn();
     }
@@ -128,14 +139,16 @@ export default class App extends Component {
   }
   startGame() {
     let spaces = this.buildSpaces(9, null);
-    let players = this.buildPlayers(3);
-    this.setState({ spaces, players, win: false });
+    let players = this.buildPlayers(2);
+    let scores = this.state.scores || this.buildScores(2);
+    this.setState({ spaces, players, scores, win: false, turn: 0 });
   }
   componentWillMount() {
     this.startGame();
   }
   render() {
     let color = this.turnColor();
+    console.log(this.state.players);
     return (
       <div className="App">
         <div className="game">
@@ -146,7 +159,7 @@ export default class App extends Component {
           <Board select={this.selectPiece} boardType={'player one'} spaces={this.state.players[0]} />
         </div>
         <div className="stats">
-          <Stats win={this.state.win} turn={this.state.turn} color={color}/> 
+          <Stats win={this.state.win} turn={this.state.turn} color={color} scores={this.state.scores}/> 
         </div>
       </div>
       );
