@@ -16,14 +16,10 @@ export default class App extends Component {
       selectedPiece: null,
       selectedSpace: null
     }
-    this.selectPiece = this.selectPiece.bind(this);
     this.selectSpace = this.selectSpace.bind(this);
-    this.setSpace = this.setSpace.bind(this);
-    this.canMove = this.canMove.bind(this);
-    this.checkWin = this.checkWin.bind(this);
+    this.spaceIsOpen = this.spaceIsOpen.bind(this);
     this.turnColor = this.turnColor.bind(this);
     this.startGame = this.startGame.bind(this);
-    this.markSelected = this.markSelected.bind(this);
   }
   // workflow:
   // selectSpace chooses a space
@@ -75,23 +71,24 @@ export default class App extends Component {
     }
   }
   spaceIsOpen = async (index, size) => await this.state.spaces[index][size] === null;
+
   async selectSpace(size, color, index) {
     if (color !== null) return;
-    if (spaceIsOpen(index, size)) {
-      this.setState({selectedSpace: null});
+    if (this.spaceIsOpen(index, size)) {
+      console.log('success');
+    }
   }
   startGame() {
     let spaces = this.buildSpaces(9, null);
     let players = this.buildPlayers(4);
-    let scores = this.state.scores || this.buildScores(4);
-    this.setState({ spaces, players, scores, win: false, turn: 0 });
+    // let scores = this.state.scores || this.buildScores(4);
+    this.setState({ spaces, players, win: false, turn: 0 });
   }
   componentWillMount() {
     this.startGame();
   }
   render() {
     let color = this.turnColor();
-    console.log(this.state.players);
     return (
       <div className="App">
         <div className="game">
@@ -101,9 +98,10 @@ export default class App extends Component {
           <Board boardType={'player two'} spaces={this.state.players[1]} />
           <Board boardType={'player one'} spaces={this.state.players[0]} />
         </div>
-        <div className="stats">
-          <Stats win={this.state.win} turn={this.state.turn} color={color} scores={this.state.scores}/> 
-        </div>
+        {// <div className="stats">
+          // <Stats win={this.state.win} turn={this.state.turn} color={color} scores={this.state.scores}/> 
+          // </div> 
+        }
       </div>
       );
   }
