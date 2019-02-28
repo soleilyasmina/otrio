@@ -25,6 +25,19 @@ export default class App extends Component {
     this.startGame = this.startGame.bind(this);
     this.markSelected = this.markSelected.bind(this);
   }
+  // workflow:
+  // selectSpace chooses a space
+  // spaceIsOpen validates the space
+  // hasPiece validates the player
+  // markSpace changes the space to the right color
+  // removePiece removes the piece from the player
+  // checkWin checks if there are win conditions
+  // if win then awardPoints, game is reset
+  // if not then changeTurn
+  // hasMoves checks the following player to see if they have moves
+  // if !hasMoves, boardMoves checks every player for moves (calling hasMoves on each player)
+  // if !boardMoves, game is reset
+
   buildSpaces(amount, color) {
     let spaces = [];
     for (let i = 0; i < amount; i++) {
@@ -42,14 +55,6 @@ export default class App extends Component {
       players.push(this.buildSpaces(3,null));
     }
     return players;
-  }
-  buildScores(amount) {
-    let scores = [];
-    for (let i = 0; i < amount; i++) {
-      let color = this.turnColor(i);
-      scores.push({ points: 0, username: color, color });
-    }
-    return scores;
   }
   async changeTurn() {
     let { turn, scores } = this.state;
@@ -69,78 +74,16 @@ export default class App extends Component {
         return 'firebrick';
     }
   }
-  async markSelected(selected) {
-    let { selectedPiece, players, turn } = this.state;
-    let { index, piece, color } = selectedPiece;
-    if(selected) {
-      players[turn][index][piece] += ' selected' ;
-    } else {
-      players[turn][index][piece] = players[turn][index][piece].split(' ')[0];
-    }
-    this.setState({ players });
-  }
-  async selectPiece(piece, color, index) {
-    if (color === null || color !== this.turnColor()) return;
-    if (this.state.selectedPiece) {
-      await this.markSelected(false);
-      await this.setState({selectedPiece: null});
-    } else {
-      await this.setState({selectedPiece: {piece, color, index}});
-      await this.markSelected(true);
-    }
-    
-  }
-  async selectSpace(space, color, index) {
-    if (color !== null || this.state.selectedPiece === null ) return;
-    let { selectedSpace } = await this.state;
-    if (selectedSpace) {
+  spaceIsOpen = async (index, size) => await this.state.spaces[index][size] === null;
+  async selectSpace(size, color, index) {
+    if (color !== null) return;
+    if (spaceIsOpen(index, size)) {
       this.setState({selectedSpace: null});
-    } else {
-      this.setState({selectedSpace: {space, index}});
-    }
-    this.canMove();
-  }
-  async canMove() {
-    let { selectedSpace, selectedPiece } = this.state;
-    console.log(selectedSpace, selectedPiece);
-    if (selectedSpace && selectedPiece 
-      && selectedSpace.space === selectedPiece.piece) {
-      await this.setSpace(selectedSpace, selectedPiece.color);
-      await this.removePiece(selectedPiece);
-      await this.setState({ selectedPiece: null, selectedSpace: null });
-      await this.checkWin();
-    }
-  }
-  async hasMoves() {
-    let { spaces, players } = this.state;
-  }
-  async checkWin() {
-    await this.setState({ win: win(this.state.spaces) });
-    if (this.state.win) {
-      let { scores } = this.state;
-      scores[this.state.turn].points += 1;
-      await setTimeout(this.startGame, 3000);
-      await this.setState({ turn: 0, scores });
-    } else {
-      await this.changeTurn();
-    }
-  }
-  async setSpace(selectedSpace, color) {
-    let { space, index } = selectedSpace;
-    let { spaces } = this.state;
-    spaces[index][space] = color;
-    await this.setState({ spaces });
-  }
-  async removePiece(selectedPiece) {
-    let { piece, index } = selectedPiece;
-    let { players, turn } = this.state;
-    players[turn][index][piece] = null;
-    await this.setState({ players });
   }
   startGame() {
     let spaces = this.buildSpaces(9, null);
-    let players = this.buildPlayers(2);
-    let scores = this.state.scores || this.buildScores(2);
+    let players = this.buildPlayers(4);
+    let scores = this.state.scores || this.buildScores(4);
     this.setState({ spaces, players, scores, win: false, turn: 0 });
   }
   componentWillMount() {
@@ -153,10 +96,10 @@ export default class App extends Component {
       <div className="App">
         <div className="game">
           <Board select={this.selectSpace} boardType={'board'} spaces={this.state.spaces} />
-          <Board select={this.selectPiece} boardType={'player four'} spaces={this.state.players[3]} />
-          <Board select={this.selectPiece} boardType={'player three'} spaces={this.state.players[2]} />
-          <Board select={this.selectPiece} boardType={'player two'} spaces={this.state.players[1]} />
-          <Board select={this.selectPiece} boardType={'player one'} spaces={this.state.players[0]} />
+          <Board boardType={'player four'} spaces={this.state.players[3]} />
+          <Board boardType={'player three'} spaces={this.state.players[2]} />
+          <Board boardType={'player two'} spaces={this.state.players[1]} />
+          <Board boardType={'player one'} spaces={this.state.players[0]} />
         </div>
         <div className="stats">
           <Stats win={this.state.win} turn={this.state.turn} color={color} scores={this.state.scores}/> 
