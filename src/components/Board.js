@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Space from './Space.js';
 
 export default function Board(props) {
