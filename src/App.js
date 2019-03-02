@@ -13,8 +13,6 @@ export default class App extends Component {
       win: false,
       turn: 0,
       scores: null,
-      selectedPiece: null,
-      selectedSpace: null
     }
     this.selectSpace = this.selectSpace.bind(this);
     this.hasPiece = this.hasPiece.bind(this);
@@ -24,17 +22,6 @@ export default class App extends Component {
     this.turnColor = this.turnColor.bind(this);
     this.startGame = this.startGame.bind(this);
   }
-  // workflow:
-  // selectSpace chooses a space
-  // hasPiece validates the player
-  // markSpace changes the space to the right color
-  // removePiece removes the piece from the player
-  // checkWin checks if there are win conditions
-  // if win then awardPoints, game is reset
-  // if not then changeTurn
-  // hasMoves checks the following player to see if they have moves
-  // if !hasMoves, boardMoves checks every player for moves (calling hasMoves on each player)
-  // if !boardMoves, game is reset
 
   buildSpaces(amount, color) {
     let spaces = [];
@@ -62,24 +49,6 @@ export default class App extends Component {
     }
     return scores;
   }
-  async incrementTurn() {
-    let { turn, scores } = await this.state;
-    await turn === scores.length - 1 ?
-      this.setState({turn: 0}) :
-      this.setState({turn: turn + 1});
-  }
-  async changeTurn() {
-    let { players, turn, scores } = this.state;
-    if (await this.boardMoves() === false) {
-      await setTimeout(this.startGame, 1500);
-    } else {
-      await this.incrementTurn();
-      console.log(await this.hasMoves());
-      while (await this.hasMoves() === false) {
-        await this.incrementTurn();
-      }
-    }
-  }
   turnColor(turn = this.state.turn) {
     switch(turn) {
       case 1:
@@ -90,6 +59,24 @@ export default class App extends Component {
         return 'darkorchid';
       default:
         return 'firebrick';
+    }
+  }
+  async incrementTurn() {
+    let { turn, scores } = await this.state;
+    await turn === scores.length - 1 ?
+      this.setState({turn: 0}) :
+      this.setState({turn: turn + 1});
+  }
+  async changeTurn() {
+    let { players, turn, scores } = this.state;
+    if (await this.boardMoves() === false) {
+      await this.setState({ win: null, loading: true });
+      await setTimeout(this.startGame, 1500);
+    } else {
+      await this.incrementTurn();
+      while (await this.hasMoves() === false) {
+        await this.incrementTurn();
+      }
     }
   }
   async hasPiece(piece) {
@@ -123,14 +110,10 @@ export default class App extends Component {
   async hasMoves() {
     let { spaces, players, turn } = await this.state;
     if (await this.hasPiece('large') && spaces.some(space => space.large === null)) {
-      console.log(players[turn]);
-      spaces.forEach((space, index) => space.large === null ? console.log(index) : null);
       return true;
     } else if (await this.hasPiece('medium') && spaces.some(space => space.medium === null)) {
-      console.log('has medium');
       return true;
     } else if (await this.hasPiece('small') && spaces.some(space => space.small === null)) {
-      console.log('has small');
       return true;
     } else {
       return false;
@@ -141,11 +124,13 @@ export default class App extends Component {
     return spaces.some(space => Object.values(space).some(piece => piece === null));
   }
   async selectSpace(size, color, index) {
+    let { loading } = await this.state;
+    if (loading) return;
     if (color === null && await this.hasPiece(size)) { // validates player
       await this.markSpace(size, index);
       await this.removePiece(size);
       if (await this.checkWin()) {
-        await this.setState({ win: true });
+        await this.setState({ win: true, loading: true });
         await this.awardPoints(this.state.turn);
         await setTimeout(this.startGame, 1500);
       } else {
@@ -157,7 +142,7 @@ export default class App extends Component {
     let spaces = this.buildSpaces(9, null);
     let players = this.buildPlayers(4);
     let scores = this.state.scores || this.buildScores(4);
-    this.setState({ spaces, players, scores, win: false, turn: 0 });
+    this.setState({ spaces, players, scores, win: false, turn: 0, loading: false });
   }
   componentWillMount() {
     this.startGame();
