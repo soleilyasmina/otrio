@@ -140,14 +140,11 @@ export default class App extends Component {
       }
     }
   }
-  startGame() {
+  startGame(num = this.state.scores.length) {
     let spaces = this.buildSpaces(9, null);
-    let players = this.buildPlayers(4);
-    let scores = this.state.scores || this.buildScores(4);
-    this.setState({ spaces, players, scores, win: false, turn: 0, loading: false });
-  }
-  componentWillMount() {
-    this.startGame();
+    let players = this.buildPlayers(num);
+    let scores = this.state.scores || this.buildScores(num);
+    this.setState({ spaces, players, scores, win: false, turn: 0, loading: false, inGame: true });
   }
   render() {
     let { inGame } = this.state;
@@ -171,7 +168,7 @@ export default class App extends Component {
     } else {
       return (
         <div className="App">
-          <Home />
+          <Home start={this.startGame}/>
         </div>
       )
     }
