@@ -68,7 +68,6 @@ export default class App extends Component {
       this.setState({turn: turn + 1});
   }
   async changeTurn() {
-    let { players, turn, scores } = this.state;
     if (await this.boardMoves() === false) {
       await this.setState({ win: null, loading: true });
       await setTimeout(this.startGame, 1500);
@@ -108,7 +107,7 @@ export default class App extends Component {
     this.setState({ scores });
   }
   async hasMoves() {
-    let { spaces, players, turn } = await this.state;
+    let { spaces } = await this.state;
     if (await this.hasPiece('large') && spaces.some(space => space.large === null)) {
       return true;
     } else if (await this.hasPiece('medium') && spaces.some(space => space.medium === null)) {
