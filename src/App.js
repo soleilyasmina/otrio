@@ -13,6 +13,7 @@ export default class App extends Component {
       win: false,
       turn: 0,
       scores: null,
+      loading: false
     }
     this.selectSpace = this.selectSpace.bind(this);
     this.hasPiece = this.hasPiece.bind(this);
