@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Board from './components/Board';
 import Stats from './components/Stats';
+import Home from './components/Home';
 import win from './services/winconditions';
 
 export default class App extends Component {
@@ -13,7 +14,8 @@ export default class App extends Component {
       win: false,
       turn: 0,
       scores: null,
-      loading: false
+      loading: false,
+      inGame: false
     }
     this.selectSpace = this.selectSpace.bind(this);
     this.hasPiece = this.hasPiece.bind(this);
@@ -148,20 +150,30 @@ export default class App extends Component {
     this.startGame();
   }
   render() {
-    let color = this.turnColor();
-    return (
-      <div className="App">
-        <div className="game">
-          <Board select={this.selectSpace} boardType={'board'} spaces={this.state.spaces} />
-          <Board select={() => {}} boardType={'player four'} spaces={this.state.players[3]} />
-          <Board select={() => {}} boardType={'player three'} spaces={this.state.players[2]} />
-          <Board select={() => {}} boardType={'player two'} spaces={this.state.players[1]} />
-          <Board select={() => {}} boardType={'player one'} spaces={this.state.players[0]} />
+    let { inGame } = this.state;
+    let content;
+    if (inGame) {
+      let color = this.turnColor();
+      return (
+        <div className="App">
+          <div className="game">
+            <Board select={this.selectSpace} boardType={'board'} spaces={this.state.spaces} />
+            <Board select={() => {}} boardType={'player four'} spaces={this.state.players[3]} />
+            <Board select={() => {}} boardType={'player three'} spaces={this.state.players[2]} />
+            <Board select={() => {}} boardType={'player two'} spaces={this.state.players[1]} />
+            <Board select={() => {}} boardType={'player one'} spaces={this.state.players[0]} />
+          </div>
+          <div className="stats">
+            <Stats win={this.state.win} turn={this.state.turn} color={color} scores={this.state.scores}/> 
+          </div> 
         </div>
-        <div className="stats">
-          <Stats win={this.state.win} turn={this.state.turn} color={color} scores={this.state.scores}/> 
-        </div> 
-      </div>
-      );
+        );
+    } else {
+      return (
+        <div className="App">
+          <Home />
+        </div>
+      )
+    }
   }
 }
