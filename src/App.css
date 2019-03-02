@@ -1,5 +1,6 @@
 h1 {
   font-size: 40px;
+  color: white;
 }
 .App {
   text-align: center;
@@ -161,16 +162,49 @@ h1 {
   color: white;
 }
 
+.Home {
+  margin: auto;
+}
+.Home h1 {
+  animation: glowtext 1.5s ease-in-out infinite alternate;
+  font-size: 100px;
+}
+
+.player-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 33vh;
+}
+.player-container div {
+  color: white;
+  font-size: 20px;
+  border: 1px solid white;
+  width: 100px;
+  padding: 10px;
+  animation: firebrick 1.5s ease-in-out infinite alternate;
+}
 
 @keyframes firebrick {
   from {
-    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px firebrick, 0 0 40px firebrick
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #C62EF6, 0 0 40px #C62EF6;
+    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #C62EF6, 0 0 40px #C62EF6
   }
   to {
-    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px firebrick, 0 0 30px firebrick
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #C62EF6, 0 0 30px #C62EF6;
+    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #C62EF6, 0 0 30px #C62EF6
   }
 }
 
+@keyframes glowtext {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #C62EF6, 0 0 40px #C62EF6;
+  }
+  to {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #C62EF6, 0 0 30px #C62EF6;
+  }
+}
 
 @media (max-width: 1100px) {
   .App {
