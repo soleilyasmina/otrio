@@ -74,6 +74,7 @@ export default class App extends Component {
       await setTimeout(this.startGame, 1500);
     } else {
       await this.incrementTurn();
+      console.log(await this.hasMoves());
       while (await this.hasMoves() === false) {
         await this.incrementTurn();
       }
@@ -121,13 +122,15 @@ export default class App extends Component {
   }
   async hasMoves() {
     let { spaces, players, turn } = await this.state;
-    if (players[turn].some(space => Object.values(space).some(piece => piece !== null))) {
+    if (await this.hasPiece('large') && spaces.some(space => space.large === null)) {
+      console.log(players[turn]);
+      spaces.forEach((space, index) => space.large === null ? console.log(index) : null);
       return true;
-    } else if (this.hasPiece('large') && spaces.some(space => space.large === null)) {
+    } else if (await this.hasPiece('medium') && spaces.some(space => space.medium === null)) {
+      console.log('has medium');
       return true;
-    } else if (this.hasPiece('medium') && spaces.some(space => space.medium === null)) {
-      return true;
-    } else if (this.hasPiece('small') && spaces.some(space => space.small === null)) {
+    } else if (await this.hasPiece('small') && spaces.some(space => space.small === null)) {
+      console.log('has small');
       return true;
     } else {
       return false;
