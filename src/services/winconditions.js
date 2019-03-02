@@ -9,6 +9,7 @@ const sameSpace = (spaces) => {
     if ( small === medium && medium === large && large !== null ) {
       return true;
     }
+    return false;
   })
 }
 
