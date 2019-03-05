@@ -31,7 +31,7 @@ h1 {
   box-sizing: border-box;
   position: absolute;
 }
-.null:hover {
+.board .null:hover {
   box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #C62EF6, 0 0 40px #C62EF6
 }
 
