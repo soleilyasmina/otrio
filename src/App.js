@@ -39,9 +39,6 @@ export default class App extends Component {
       let color = this.turnColor(i);
       players.push(this.buildSpaces(3, color));
     }
-    for (let i = amount; i < 4; i++) {
-      players.push(this.buildSpaces(3, null));
-    }
     return players;
   }
   buildScores(amount) {
@@ -155,10 +152,16 @@ export default class App extends Component {
         <div className="App">
           <div className="game">
             <Board select={this.selectSpace} boardType={'board'} spaces={this.state.spaces} />
-            <Board select={() => {}} boardType={'player four'} spaces={this.state.players[3]} />
-            <Board select={() => {}} boardType={'player three'} spaces={this.state.players[2]} />
-            <Board select={() => {}} boardType={'player two'} spaces={this.state.players[1]} />
-            <Board select={() => {}} boardType={'player one'} spaces={this.state.players[0]} />
+            { this.state.players.map((player, index) => {
+              let num;
+              switch(index) {
+                case 1: num = 'two'; break;
+                case 2: num = 'three'; break;
+                case 3: num = 'four'; break;
+                default: num = 'one'; break;
+              };
+              return <Board select={() => {}} boardType={`player ${num}`} spaces={player} />;
+            }) }
           </div>
           <div className="stats">
             <Stats win={this.state.win} turn={this.state.turn} color={color} scores={this.state.scores}/> 
